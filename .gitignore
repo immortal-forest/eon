@@ -12,3 +12,4 @@ wheels/
 # Project files
 *.docx
 *.pdf
+player/state.json
