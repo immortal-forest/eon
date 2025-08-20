@@ -1,0 +1,387 @@
+{
+  "start_scene": "cryo_chamber",
+  "cryo_chamber": {
+    "description": "You awaken in the cryo-chamber. The humming of life support has been replaced by an eerie silence. Across the room, a terminal flickers with a red warning message.",
+    "options": [
+      {
+        "text": "Attempt to force the cryo-unit door open.",
+        "next_scene": "forced_door"
+      },
+      {
+        "text": "Access the terminal.",
+        "next_scene": "terminal_room"
+      }
+    ]
+  },
+  "forced_door": {
+    "description": "You push against the door, but it's sealed shut. You receive a slight electric shock from the console. You realize you must use the terminal.",
+    "options": [
+      {
+        "text": "Go to the terminal.",
+        "next_scene": "terminal_room"
+      }
+    ]
+  },
+  "terminal_room": {
+    "description": "The terminal screen displays a command prompt. The ship's AI, 'COSMOS,' responds with fragmented messages. 'Please... enter... command... to... proceed.'",
+    "options": [
+      {
+        "text": "Enter 'REBOOT'.",
+        "next_scene": "hallway"
+      },
+      {
+        "text": "Enter 'OVERRIDE'.",
+        "next_scene": "override_fail"
+      }
+    ]
+  },
+  "override_fail": {
+    "description": "Your attempt to override the system fails. The terminal flashes, and you feel a surge of power. You must enter the correct command.",
+    "options": [
+      {
+        "text": "Go back and enter the correct command.",
+        "next_scene": "terminal_room"
+      }
+    ]
+  },
+  "hallway": {
+    "description": "The cryo-unit door slides open. You step into a dimly lit hallway. A single, flickering emergency light illuminates a sign for the 'Maintenance Deck' and a closed blast door leading to the 'Bridge'.",
+    "options": [
+      {
+        "text": "Head toward the Maintenance Deck.",
+        "next_scene": "maintenance_deck"
+      },
+      {
+        "text": "Try to open the blast door to the Bridge.",
+        "next_scene": "bridge_door_check"
+      }
+    ]
+  },
+  "maintenance_deck": {
+    "description": "You enter the maintenance deck. It's filled with damaged equipment and scattered tools. The air is cold and smells of ozone.",
+    "options": [
+      {
+        "text": "Return to the hallway.",
+        "next_scene": "hallway"
+      },
+      {
+        "text": "Explore further.",
+        "next_scene": "maintenance_check"
+      }
+    ]
+  },
+  "maintenance_check": {
+    "description": "The Maintenance Deck is dark and cold. You see a glint of metal on the floor—a 'data_key'!",
+    "options": [
+      {
+        "text": "Pick up the data key.",
+        "next_scene": "hallway_return",
+        "gives_item": "data_key"
+      },
+      {
+        "text": "Return to the hallway.",
+        "next_scene": "hallway"
+      }
+    ]
+  },
+  "hallway_return": {
+    "description": "You now have the data key and are back in the hallway. The two paths lie before you.",
+    "options": [
+      {
+        "text": "Go to the Maintenance Deck.",
+        "next_scene": "maintenance_deck"
+      },
+      {
+        "text": "Try to open the blast door to the Bridge.",
+        "next_scene": "bridge_door_check"
+      }
+    ]
+  },
+  "bridge_door_check": {
+    "description": "You approach the Bridge door. It's sealed with a high-tech lock. A terminal next to it has a port for a data key.",
+    "options": [
+      {
+        "text": "Use the data key to open the door.",
+        "prerequisites": {
+          "items": [
+            "data_key"
+          ]
+        },
+        "next_scene": "bridge_entry"
+      },
+      {
+        "text": "You do not have the data key. Return to the hallway.",
+        "prerequisites": {
+          "items_not": [
+            "data_key"
+          ]
+        },
+        "next_scene": "hallway"
+      }
+    ]
+  },
+  "bridge_entry": {
+    "description": "You successfully use the key. The bridge door slides open, revealing a large, dark room. A strange, semi-transparent entity flickers in the center.",
+    "options": [
+      {
+        "text": "Approach the entity.",
+        "next_scene": "combat_start"
+      },
+      {
+        "text": "Try to sneak past it.",
+        "next_scene": "sneak_past_fail"
+      }
+    ]
+  },
+  "sneak_past_fail": {
+    "description": "You try to sneak by, but the entity's energy pulses ripple through your suit. It becomes aware of your presence and attacks!",
+    "options": [
+      {
+        "text": "You have no choice but to fight.",
+        "next_scene": "combat_start"
+      }
+    ]
+  },
+  "combat_start": {
+    "description": "The entity senses your presence and attacks!",
+    "enemy": {
+      "name": "Glitch-Entity",
+      "hp": 30,
+      "damage": 5
+    },
+    "options": [
+      {
+        "text": "Fight!",
+        "next_scene": "combat_loop"
+      }
+    ]
+  },
+  "combat_loop": {
+    "description": "The combat is underway.",
+    "options": [
+      {
+        "text": "Attack",
+        "next_scene": "combat_check"
+      },
+      {
+        "text": "Defend",
+        "next_scene": "combat_check"
+      }
+    ]
+  },
+  "combat_check": {
+    "description": "won't be shown",
+    "options": [
+      {
+        "text": "",
+        "next_scene": "victory"
+      },
+      {
+        "text": "",
+        "next_scene": "defeat"
+      }
+    ]
+  },
+  "victory": {
+    "description": "You successfully defeated the Glitch-Entity. Its energy dissipates, leaving behind a faint hum.",
+    "options": [
+      {
+        "text": "Proceed deeper into the Bridge.",
+        "next_scene": "bridge_deep"
+      }
+    ]
+  },
+  "defeat": {
+    "description": "The Glitch-Entity overwhelms you. Your systems fail. The nebula consumes your last flicker of light.",
+    "options": [
+      {
+        "text": "",
+        "next_scene": "over"
+      }
+    ]
+  },
+  "bridge_deep": {
+    "description": "You stand on the bridge, the ship's fate in your hands. You can try to repair the FTL drive to escape this cosmic anomaly, or you can delve deeper into the nebula's energy source to understand its nature.",
+    "options": [
+      {
+        "text": "Repair the FTL drive and attempt to escape.",
+        "next_scene": "escape_path"
+      },
+      {
+        "text": "Investigate the nebula's energy source.",
+        "next_scene": "discovery_path"
+      }
+    ]
+  },
+  "escape_path": {
+    "description": "You decide to prioritize survival. You begin rerouting power to the FTL drive, a process that will take time and require you to secure critical systems.",
+    "options": [
+      {
+        "text": "Begin FTL repairs.",
+        "next_scene": "ft_repair_scene"
+      }
+    ]
+  },
+  "discovery_path": {
+    "description": "You choose to satisfy your curiosity, believing the nebula holds the answers to your crew's disappearance. You reroute power to the main sensors to analyze the energy readings.",
+    "options": [
+      {
+        "text": "Begin energy analysis.",
+        "next_scene": "analysis_scene"
+      }
+    ]
+  },
+  "ft_repair_scene": {
+    "description": "You begin the tedious process of repairing the FTL drive. A main power regulator is damaged and needs to be replaced. You'll have to find one in the cargo bay.",
+    "options": [
+      {
+        "text": "Go to the cargo bay.",
+        "next_scene": "cargo_bay"
+      }
+    ]
+  },
+  "cargo_bay": {
+    "description": "The cargo bay is massive and dark. You find a 'power_regulator' near a stack of containers.",
+    "options": [
+      {
+        "text": "Pick up the power regulator.",
+        "next_scene": "ft_repair_scene",
+        "gives_item": "power_regulator"
+      },
+      {
+        "text": "Return to the FTL drive.",
+        "next_scene": "ft_repair_scene"
+      }
+    ]
+  },
+  "cargo_bay_combat_start": {
+    "description": "You enter the cargo bay and are immediately cornered by a second, more powerful Glitch-Entity.",
+    "enemy": {
+      "name": "Glitch-Entity Prime",
+      "hp": 50,
+      "damage": 10
+    },
+    "options": [
+      {
+        "text": "Fight!",
+        "next_scene": "combat_loop_cargo"
+      }
+    ]
+  },
+  "combat_loop_cargo": {
+    "description": "The combat is underway. The terminal should show updated HP values and a prompt for your action.",
+    "options": [
+      {
+        "text": "Attack",
+        "next_scene": "combat_check_cargo"
+      },
+      {
+        "text": "Defend",
+        "next_scene": "combat_check_cargo"
+      }
+    ]
+  },
+  "combat_check_cargo": {
+    "description": "This scene is for the logic to handle a single turn of combat. Read the player's choice, update HP, and then either continue the fight or transition to a victory/defeat scene.",
+    "options": [
+      {
+        "text": "",
+        "next_scene": "victory_cargo"
+      },
+      {
+        "text": "",
+        "next_scene": "defeat"
+      }
+    ]
+  },
+  "victory_cargo": {
+    "description": "You successfully defeated the Glitch-Entity Prime. Its energy dissipates, leaving behind a faint hum. The path is clear.",
+    "options": [
+      {
+        "text": "Search the cargo bay for the power regulator.",
+        "next_scene": "cargo_bay"
+      }
+    ]
+  },
+  "final_escape_check": {
+    "description": "You install the power regulator. The FTL drive hums to life, but the nebula's energy begins to pull on the ship. You have one chance to jump to safety.",
+    "options": [
+      {
+        "text": "Initiate the jump sequence immediately.",
+        "prerequisites": {
+          "items": [
+            "power_regulator"
+          ]
+        },
+        "next_scene": "end_1_escape_success"
+      },
+      {
+        "text": "Delay the jump to align the ship perfectly. (Risky)",
+        "prerequisites": {
+          "items": [
+            "power_regulator"
+          ]
+        },
+        "next_scene": "end_1_escape_failure"
+      }
+    ]
+  },
+  "end_1_escape_success": {
+    "description": "You initiate the jump sequence just in time. The ship is violently shaken, but you break free from the nebula's pull. You have escaped.",
+    "options": [
+      {
+        "text": "",
+        "next_scene": "end"
+      }
+    ]
+  },
+  "end_1_escape_failure": {
+    "description": "You delay the jump. The nebula's pull is too strong. Your ship is torn apart, and your last thoughts are of the cosmic entity.",
+    "options": [
+      {
+        "text": "",
+        "next_scene": "over"
+      }
+    ]
+  },
+  "analysis_scene": {
+    "description": "You begin rerouting power to the ship's main sensor array. You analyze the energy readings from the nebula. They are complex, almost like a language. You realize the nebula isn't just a physical anomaly; it is a conscious being.",
+    "options": [
+      {
+        "text": "Attempt to communicate with the nebula.",
+        "next_scene": "communication_attempt"
+      }
+    ]
+  },
+  "communication_attempt": {
+    "description": "You establish a direct link. The consciousness is ancient and vast. It offers you a choice: to merge with it and become part of its knowledge, or to be a messenger, returning to humanity with a warning.",
+    "options": [
+      {
+        "text": "Merge with the entity.",
+        "next_scene": "end_2_discovery_merge"
+      },
+      {
+        "text": "Refuse and return to humanity as a messenger.",
+        "next_scene": "end_2_discovery_messenger"
+      }
+    ]
+  },
+  "end_2_discovery_merge": {
+    "description": "You willingly become one with the nebula, gaining an understanding of the universe. Your human consciousness dissolves, and you become a part of the cosmic stream.",
+    "options": [
+      {
+        "text": "",
+        "next_scene": "end"
+      }
+    ]
+  },
+  "end_2_discovery_messenger": {
+    "description": "You learn to communicate with the nebula, but you refuse its offer to merge. It grants you safe passage out of its core, leaving you as its solitary messenger to humanity.",
+    "options": [
+      {
+        "text": "",
+        "next_scene": "end"
+      }
+    ]
+  }
+}
