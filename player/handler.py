@@ -1,7 +1,7 @@
 import json
 from dataclasses import asdict
 
-from data import Player, GameFileError
+from data import GameFileError, Player
 
 
 class PlayerJsonEncoder(json.JSONEncoder):
@@ -28,5 +28,5 @@ def load_game():
         GameFileError("No save file found.")
         return None
     except (json.JSONDecodeError, TypeError):
-        GameFileError(f"Could not load save file. It may be corrupted")
+        GameFileError("Could not load save file. It may be corrupted")
         return None
