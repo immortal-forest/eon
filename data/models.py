@@ -44,6 +44,9 @@ class Player(Entity):
         attack_damage = random.randint(self.damage - 2, self.damage + 2)
         entity.take_damage(attack_damage)
 
+    def has_item(self, item) -> bool:
+        return item in self.inventory
+
 
 @dataclass
 class Enemy(Entity):
