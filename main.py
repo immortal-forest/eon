@@ -325,6 +325,7 @@ def main():
     game_script = load_script()
     scene_name = game_script["start_scene"]
     combat_log = []
+    random_combat = []
     enemy = None
 
     # game loop
@@ -333,8 +334,9 @@ def main():
 
         if "combat" in current_scene:
             # 20% chance of triggering combat
-            if random() < 0.2:
+            if random() < 0.2 and scene_name not in random_combat:
                 scene_name = current_scene["combat"]
+                random_combat.append(scene_name)
                 continue
 
         if "enemy" in current_scene and not enemy:
@@ -407,10 +409,10 @@ def main():
             move_cursor(5, 0)
             break
 
-        if current_scene in ["end", "over"]:
+        if scene_name in ["end", "over"]:
             clear_screen()
             move_cursor(1, 1)
-            typing_anim(get_scene(current_scene, game_script)["description"])
+            typing_anim(current_scene["message"])
             move_cursor(5, 0)
             break
 
