@@ -47,6 +47,9 @@ class Player(Entity):
     def has_item(self, item) -> bool:
         return item in self.inventory
 
+    def has_items(self) -> bool:
+        return bool(self.inventory)
+
 
 @dataclass
 class Enemy(Entity):
@@ -61,3 +64,9 @@ class Enemy(Entity):
     def attack(self, entity: Entity):
         attack_damage = random.randint(self.damage - 4, self.damage + 2)
         entity.take_damage(attack_damage)
+
+    def action(self, target: Entity):
+        if random.random() < 0.3:
+            self.is_defending = True
+        else:
+            self.attack(target)
