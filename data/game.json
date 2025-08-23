@@ -1,5 +1,5 @@
 {
-  "start_scene": "cryo_chamber",
+  "start_scene": "cargo_bay",
   "cryo_chamber": {
     "description": "You awaken in the cryo-chamber. The humming of life support has been replaced by an eerie silence. Across the room, a terminal flickers with a red warning message.",
     "options": [
@@ -260,19 +260,21 @@
     "description": "You initiate the jump sequence just in time. The ship is violently shaken, but you break free from the nebula's pull. You have escaped.",
     "options": [
       {
-        "text": "",
+        "text": "The END",
         "next_scene": "end"
       }
-    ]
+    ],
+    "message": "The first breath of free air burned in your lungs. Behind you, a scar on the horizon was all that remained of your prison. You don't know what the future holds, but for the first time in forever, it is yours to choose."
   },
   "end_1_escape_failure": {
     "description": "You delay the jump. The nebula's pull is too strong. Your ship is torn apart, and your last thoughts are of the cosmic entity.",
     "options": [
       {
-        "text": "",
+        "text": "You failed.",
         "next_scene": "over"
       }
-    ]
+    ],
+    "message": "The alarms blared one final time before cutting to a dead silence. The shadow you were fleeing now stretched to meet your own. There is no escape. There is only the end."
   },
   "analysis_scene": {
     "description": "You begin rerouting power to the ship's main sensor array. You analyze the energy readings from the nebula. They are complex, almost like a language. You realize the nebula isn't just a physical anomaly; it is a conscious being.",
@@ -300,18 +302,20 @@
     "description": "You willingly become one with the nebula, gaining an understanding of the universe. Your human consciousness dissolves, and you become a part of the cosmic stream.",
     "options": [
       {
-        "text": "",
+        "text": "The END",
         "next_scene": "end"
       }
-    ]
+    ],
+    "message": "The boundaries of self dissolved into a sea of light and pure information. The question of \"who you were\" became irrelevant. All that mattered was what \"we\" were about to become."
   },
   "end_2_discovery_messenger": {
     "description": "You learn to communicate with the nebula, but you refuse its offer to merge. It grants you safe passage out of its core, leaving you as its solitary messenger to humanity.",
     "options": [
       {
-        "text": "",
+        "text": "The END",
         "next_scene": "end"
       }
-    ]
+    ],
+    "message": "The discovery was not the end, but the beginning. You left that place not as an explorer, but as a messenger, carrying a truth that would either save humanity, or shatter it. The long journey home had begun."
   }
 }
