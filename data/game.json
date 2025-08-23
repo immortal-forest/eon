@@ -125,7 +125,7 @@
     "options": [
       {
         "text": "Approach the entity.",
-        "next_scene": "combat_start"
+        "next_scene": "bridge_combat"
       },
       {
         "text": "Try to sneak past it.",
