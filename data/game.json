@@ -1,5 +1,5 @@
 {
-  "start_scene": "cargo_bay",
+  "start_scene": "cryo_chamber",
   "cryo_chamber": {
     "description": "You awaken in the cryo-chamber. The humming of life support has been replaced by an eerie silence. Across the room, a terminal flickers with a red warning message.",
     "options": [
