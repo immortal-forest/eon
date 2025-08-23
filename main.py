@@ -11,6 +11,7 @@ from player.handler import load_game
 from term import (
     Colors,
     Style,
+    clear_acursor,
     clear_line,
     clear_screen,
     display,
@@ -265,6 +266,8 @@ def handle_command(
                 else:
                     break
             except ValueError:
+                move_cursor(2, 0)
+                clear_acursor()
                 display(
                     stylize("Wrong option.", Colors.RED_FG, Colors.BLACK_BG),
                     2,
@@ -314,6 +317,7 @@ def handle_command(
             for i, itm in enumerate(player.inventory):
                 move_cursor(3 + i, 1)
                 typing_anim(f"- {itm}")
+                sleep(2)
         return 0
     else:
         pass
@@ -406,15 +410,29 @@ def main():
             clear_screen()
             move_cursor(1, 1)
             typing_anim("You ded bro!")
-            move_cursor(5, 0)
             break
 
         if scene_name in ["end", "over"]:
             clear_screen()
-            move_cursor(1, 1)
-            typing_anim(current_scene["message"])
-            move_cursor(5, 0)
+            for i, part in enumerate(textwrap.wrap(current_scene["message"], 60)):
+                move_cursor(1 + i, 1)
+                typing_anim(part)
             break
+    sleep(2)
+    clear_screen()
+    final_text = (
+        stylize(
+            "Thank " + stylize("you", Colors.GREEN_FG, style=Style.ITALIC),
+            Colors.GREEN_FG,
+        )
+        + " for playing "
+        + stylize("Echoes of Nebula", Colors.BLUE_FG, Colors.BLACK_BG, Style.BOLD)
+    )
+    move_cursor(4, round(os.get_terminal_size().columns / 2) - round(38 / 2))
+    typing_anim(stylize(final_text, Colors.BLUE_FG))
+    move_cursor(8, 0)
+    sleep(2)
+    exit(0)
 
 
 if __name__ == "__main__":
