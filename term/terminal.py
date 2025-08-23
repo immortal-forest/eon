@@ -1,3 +1,6 @@
+import sys
+import time
+
 from .colors import Colors, Style
 from .sequences import Sequences
 
@@ -56,6 +59,13 @@ def display(text: str, line: int, column: int):
     _print(Sequences.POS.format(line=line, column=column))
     _print(text)
     _print(Sequences.RESTORE)
+
+
+def typing_anim(text: str, delay: float = 0.03):
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()  # force it to diplay the char immediately
+        time.sleep(delay)
 
 
 def stylize(
