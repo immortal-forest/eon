@@ -138,65 +138,25 @@
     "options": [
       {
         "text": "You have no choice but to fight.",
-        "next_scene": "combat_start"
+        "next_scene": "bridge_combat"
       }
     ]
   },
-  "combat_start": {
+  "bridge_combat": {
     "description": "The entity senses your presence and attacks!",
     "enemy": {
       "name": "Glitch-Entity",
       "hp": 30,
       "damage": 5
     },
-    "options": [
-      {
-        "text": "Fight!",
-        "next_scene": "combat_loop"
-      }
-    ]
+    "on_victory": "victory_bridge"
   },
-  "combat_loop": {
-    "description": "The combat is underway.",
-    "options": [
-      {
-        "text": "Attack",
-        "next_scene": "combat_check"
-      },
-      {
-        "text": "Defend",
-        "next_scene": "combat_check"
-      }
-    ]
-  },
-  "combat_check": {
-    "description": "won't be shown",
-    "options": [
-      {
-        "text": "",
-        "next_scene": "victory"
-      },
-      {
-        "text": "",
-        "next_scene": "defeat"
-      }
-    ]
-  },
-  "victory": {
+  "victory_bridge": {
     "description": "You successfully defeated the Glitch-Entity. Its energy dissipates, leaving behind a faint hum.",
     "options": [
       {
         "text": "Proceed deeper into the Bridge.",
         "next_scene": "bridge_deep"
-      }
-    ]
-  },
-  "defeat": {
-    "description": "The Glitch-Entity overwhelms you. Your systems fail. The nebula consumes your last flicker of light.",
-    "options": [
-      {
-        "text": "",
-        "next_scene": "over"
       }
     ]
   },
@@ -242,10 +202,11 @@
   },
   "cargo_bay": {
     "description": "The cargo bay is massive and dark. You find a 'power_regulator' near a stack of containers.",
+    "combat": "cargo_bay_combat",
     "options": [
       {
         "text": "Pick up the power regulator.",
-        "next_scene": "ft_repair_scene",
+        "next_scene": "final_escape_check",
         "gives_item": "power_regulator"
       },
       {
@@ -254,45 +215,14 @@
       }
     ]
   },
-  "cargo_bay_combat_start": {
+  "cargo_bay_combat": {
     "description": "You enter the cargo bay and are immediately cornered by a second, more powerful Glitch-Entity.",
     "enemy": {
       "name": "Glitch-Entity Prime",
       "hp": 50,
       "damage": 10
     },
-    "options": [
-      {
-        "text": "Fight!",
-        "next_scene": "combat_loop_cargo"
-      }
-    ]
-  },
-  "combat_loop_cargo": {
-    "description": "The combat is underway. The terminal should show updated HP values and a prompt for your action.",
-    "options": [
-      {
-        "text": "Attack",
-        "next_scene": "combat_check_cargo"
-      },
-      {
-        "text": "Defend",
-        "next_scene": "combat_check_cargo"
-      }
-    ]
-  },
-  "combat_check_cargo": {
-    "description": "This scene is for the logic to handle a single turn of combat. Read the player's choice, update HP, and then either continue the fight or transition to a victory/defeat scene.",
-    "options": [
-      {
-        "text": "",
-        "next_scene": "victory_cargo"
-      },
-      {
-        "text": "",
-        "next_scene": "defeat"
-      }
-    ]
+    "on_victory": "victory_cargo"
   },
   "victory_cargo": {
     "description": "You successfully defeated the Glitch-Entity Prime. Its energy dissipates, leaving behind a faint hum. The path is clear.",
