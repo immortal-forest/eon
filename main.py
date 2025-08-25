@@ -12,7 +12,6 @@ from term import (
     Colors,
     Style,
     clear_acursor,
-    clear_line,
     clear_screen,
     display,
     move_cursor,
@@ -78,7 +77,7 @@ def render_main_window(scene: dict, combat_log=None):
             display(line, 6 + i, round(term_cols - len(max(enemy_art))) - 5)
 
         display(stylize("Combat:", style=Style.UNDERLINE), 12, 2)
-        for i, log in enumerate(combat_log[-3:]):  # gives last 3 logs
+        for i, log in enumerate(combat_log[-2:]):  # gives last 2 logs
             display(
                 "- "
                 + (
@@ -94,7 +93,6 @@ def render_main_window(scene: dict, combat_log=None):
         display(stylize("Description:", style=Style.UNDERLINE), 8, 2)
         wrapped_lines = textwrap.wrap(scene["description"], width=75)
         for i, line in enumerate(wrapped_lines):
-            # display(line, 9 + i, 4)
             move_cursor(9 + i, 4)
             typing_anim(line)
             line_num = 9 + i
@@ -138,7 +136,8 @@ def render_options(line: int, scene: dict, player: Player, enemy: Enemy | None):
                 if required_items:
                     req_text = f" (Requires: {', '.join(required_items)})"
                     styled_text += stylize(req_text, fg=Colors.RED_FG)
-            display(styled_text, line + 4 + 1 + i, 4)
+            move_cursor(line + 4 + 1 + i, 4)
+            typing_anim(styled_text, 0.02)
             line_num = line + 4 + 1 + i
     return valid_opts, line_num
 
@@ -149,41 +148,41 @@ def get_player_action(line_num: int, num_ops: int):
 
     while True:
         # this will be error line
-        move_cursor(line_num + 1, 0)
-        clear_line()
-        # input line
         move_cursor(line_num + 2, 0)
-        clear_line()
+        clear_acursor()
+        # input line
+        move_cursor(line_num + 3, 0)
 
-        user_input = input().strip().lower()
+        user_input = input(f"? {Colors.MAGENTA_FG}").strip().lower()
+        print(f"{Colors.DEFAULT_FG}", end="")
 
         if user_input in SPECIAL_CMDS:
             return user_input
 
         if user_input == "help":
-            display(", ".join(SPECIAL_CMDS), line_num + 1, 0)
-            move_cursor(line_num + 2, 0)
+            display(", ".join(SPECIAL_CMDS), line_num + 2, 0)
+            move_cursor(line_num + 3, 0)
             input("Press any key to go back.")
             continue
 
         try:
             choice = int(user_input)
             if 1 <= choice <= num_ops:
-                move_cursor(line_num + 2, 0)
-                clear_line()
+                move_cursor(line_num + 3, 0)
+                clear_acursor()
                 return choice
             else:
                 error_text = (
                     f"Wrong choice. Please enter a number between 1 and {num_ops}"
                 )
-                display(stylize(error_text, Colors.RED_FG), line_num + 1, 0)
+                display(stylize(error_text, Colors.RED_FG), line_num + 2, 0)
                 sys.stdout.flush()  # force the text to terminal
                 sleep(2)
         except ValueError:
             error_text = (
                 "Invalid command/choice. Type a number or a command like 'help'"
             )
-            display(stylize(error_text, Colors.RED_FG), line_num + 1, 0)
+            display(stylize(error_text, Colors.RED_FG), line_num + 2, 0)
             sys.stdout.flush()  # force the text to terminal
             sleep(2)
 
@@ -360,6 +359,7 @@ def main():
                 )
             ]
 
+        display(stylize(""), 0, 0)  # set the default terminal colors
         clear_screen()
         render_status_line(player, scene_name.replace("_", " ").title(), enemy)
         line_num_mw = render_main_window(current_scene, combat_log if enemy else None)
@@ -397,7 +397,7 @@ def main():
                         fg=Colors.RED_FG,
                         style=Style.BOLD,
                     ),
-                    line_num_opt + 1,
+                    line_num_opt + 2,
                     0,
                 )
                 sys.stdout.flush()
