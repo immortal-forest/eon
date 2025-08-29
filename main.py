@@ -160,7 +160,7 @@ def get_player_action(line_num: int, num_ops: int):
             return user_input
 
         if user_input == "help":
-            display(", ".join(SPECIAL_CMDS), line_num + 2, 0)
+            display("Cmds: " + ", ".join(SPECIAL_CMDS), line_num + 2, 0)
             move_cursor(line_num + 3, 0)
             input("Press any key to go back.")
             continue
@@ -304,8 +304,7 @@ def handle_command(
         except GameFileError as e:
             move_cursor(2, 1)
             typing_anim(stylize(str(e), Colors.RED_FG))
-    elif action == "map":
-        pass
+
     elif action == "inventory":
         clear_screen()
         move_cursor(2, 1)
@@ -435,5 +434,34 @@ def main():
     exit(0)
 
 
+def home():
+    clear_screen()
+    cols = os.get_terminal_size().columns
+    text = "Echoes of Nebula"
+    move_cursor(
+        4,
+        round((cols / 2) - len(text) / 2),
+    )
+    typing_anim(stylize(text, Colors.BLUE_FG, Colors.BLACK_BG, Style.BOLD))
+    display(stylize("Select an option:", style=Style.UNDERLINE), 6, 1)
+    display(stylize("New game (Enter)", Colors.GREEN_FG), 7, 2)
+    display(stylize("Load game", Colors.YELLOW_FG), 8, 2)
+    while True:
+        move_cursor(10, 0)
+        clear_acursor()
+        move_cursor(11, 0)
+        try:
+            opt = input(f"? {Colors.MAGENTA_FG}").lower()
+            print(f"{Colors.DEFAULT_FG}", end="")
+            if opt != "" or opt != "load":
+                raise ValueError
+            break
+        except ValueError:
+            display(stylize("Invalid choice!", Colors.RED_FG), 10, 0)
+            sys.stdout.flush()
+            sleep(1.2)
+
+
 if __name__ == "__main__":
+    home()
     main()
