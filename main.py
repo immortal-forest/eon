@@ -451,9 +451,9 @@ def home():
         clear_acursor()
         move_cursor(11, 0)
         try:
-            opt = input(f"? {Colors.MAGENTA_FG}").lower()
+            opt = input(f"? {Colors.MAGENTA_FG}").strip().lower()
             print(f"{Colors.DEFAULT_FG}", end="")
-            if opt != "" or opt != "load":
+            if opt != "" and opt != "load":
                 raise ValueError
             break
         except ValueError:
