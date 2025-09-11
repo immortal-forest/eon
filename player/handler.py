@@ -1,7 +1,7 @@
 import json
 from dataclasses import asdict
 
-from data import Enemy, GameFileError, Player
+from data import Enemy, Entity, GameFileError, Player
 
 # nothing too complex here,
 # json allows us to convert dict to str and vice-versa
@@ -15,7 +15,7 @@ from data import Enemy, GameFileError, Player
 class EntityJsonEncoder(json.JSONEncoder):
     def default(self, o):
         # as explained above, player/enemy dataclass converts to dict and is used
-        if isinstance(o, Player):
+        if isinstance(o, Entity):
             return asdict(o)
         # incase its not Player/Enemy class, we call the super (parent) class's default method
         return super().default(o)
