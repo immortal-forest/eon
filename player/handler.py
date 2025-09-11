@@ -1,20 +1,30 @@
 import json
 from dataclasses import asdict
 
-from data import GameFileError, Player
-from data.models import Enemy
+from data import Enemy, GameFileError, Player
+
+# nothing too complex here,
+# json allows us to convert dict to str and vice-versa
+# here we want to change from class to str/dict maybe?
+
+# this just converts the class to dict at first, thnx to magic of dataclass: `asdict`
+# and tells json module to use it
+# tldr; tells json how to serialize or deserialize our Entity classes to dict/str
 
 
 class EntityJsonEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, Player):
-            return asdict(obj)
-        return super().default(self, obj)
+    def default(self, o):
+        # as explained above, player/enemy dataclass converts to dict and is used
+        if isinstance(o, Player):
+            return asdict(o)
+        # incase its not Player/Enemy class, we call the super (parent) class's default method
+        return super().default(o)
 
 
 def save_game(
     player: Player, enemy: Enemy | None, scene_name: str, combat_log: list | None
 ):
+    """Saves the game to a json file in data"""
     try:
         with open("data/state.json", "w") as file:
             player_json = json.dumps(player, cls=EntityJsonEncoder)
@@ -34,6 +44,7 @@ def save_game(
 
 
 def load_game():
+    """Load the save file from data"""
     try:
         with open("data/state.json", "r") as file:
             data = json.load(file)

@@ -4,6 +4,7 @@ from .exceptions import GameFileError, ScriptError
 
 
 def get_scene(name: str, script: dict):
+    """Get `name` scene from the `script`"""
     try:
         scene = script[name]
     except KeyError:
@@ -12,6 +13,7 @@ def get_scene(name: str, script: dict):
 
 
 def load_script() -> dict:
+    """Load the game script file"""
     try:
         with open("data/game.json", "r") as file:
             return json.load(file)

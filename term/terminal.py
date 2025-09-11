@@ -62,6 +62,7 @@ def display(text: str, line: int, column: int):
 
 
 def typing_anim(text: str, delay: float = 0.03):
+    """Creates a typing animation effect. Use `delay` to set time between each character output"""
     for char in text:
         sys.stdout.write(char)
         sys.stdout.flush()  # force it to diplay the char immediately
@@ -74,5 +75,5 @@ def stylize(
     bg: str = Colors.DEFAULT_BG,
     style: str = Style.RESET,
 ) -> str:
-    """Returns stylized ANSI string"""
+    """Returns stylized ANSI string."""
     return f"{style}{fg}{bg}{text}{Colors.DEFAULT_FG}{Colors.DEFAULT_BG}{Style.RESET}"

@@ -42,7 +42,10 @@ def render_status_line(player: Player, scene_name: str, enemy: Enemy | None):
     center_status = scene_name
     right_status = ""
 
+    # lenght of the text to be displayed on right side of terminal
     right_count = 0
+
+    # enemy section
     if enemy and enemy.is_alive():
         enemy_hp_text = f"HP: {enemy.hp}/{enemy.max_hp}"
         enemy_damage_text = f"Attack: {enemy.damage}"
@@ -53,8 +56,10 @@ def render_status_line(player: Player, scene_name: str, enemy: Enemy | None):
         right_status = " ".join([enemy_hp, enemy_damage])
         right_count = len(enemy_hp_text) + len(enemy_damage_text)
 
-    center_pos = (term_cols - len(scene_name)) // 2
+    center_pos = (term_cols - len(scene_name)) // 2  # in the middle of status line
     right_pos = term_cols - right_count
+
+    # same line but diff columns
     display(left_status, 2, 1)
     display(center_status, 2, center_pos)
     display(right_status, 2, right_pos)
@@ -63,11 +68,13 @@ def render_status_line(player: Player, scene_name: str, enemy: Enemy | None):
 def render_main_window(scene: dict, combat_log=None):
     """Display the main content i.e. scene description or the combat logs"""
 
+    # i ain't a designer!
     player_art = [" .---. ", "/ o o \\", "|   > |", " *___*"]
     enemy_art = [" ,o8888o. ", "888888888o", "`8888' `8'"]
     term_cols = os.get_terminal_size().columns
-    line_num = 0
+    line_num = 0  # stores the line number we are in, at the end of this function call
 
+    # check if combat/exploration
     if combat_log is not None:
         # Draw ASCII art
         for i, line in enumerate(player_art):
@@ -77,7 +84,9 @@ def render_main_window(scene: dict, combat_log=None):
             display(line, 6 + i, round(term_cols - len(max(enemy_art))) - 5)
 
         display(stylize("Combat:", style=Style.UNDERLINE), 12, 2)
-        for i, log in enumerate(combat_log[-2:]):  # gives last 2 logs
+
+        # diff color/style for attack / defend / appear
+        for i, log in enumerate(combat_log[-2:]):  # gives last 2 logs, turn-based style
             display(
                 "- "
                 + (
@@ -89,14 +98,14 @@ def render_main_window(scene: dict, combat_log=None):
                 4,
             )
             line_num = 13 + i
-    else:
+    else:  # we exploring
         display(stylize("Description:", style=Style.UNDERLINE), 8, 2)
         wrapped_lines = textwrap.wrap(scene["description"], width=75)
         for i, line in enumerate(wrapped_lines):
             move_cursor(9 + i, 4)
-            typing_anim(line)
+            typing_anim(line, 0.018)
             line_num = 9 + i
-    return line_num
+    return line_num  # helps us to not OVERRIDE the last line
 
 
 def render_options(line: int, scene: dict, player: Player, enemy: Enemy | None):
@@ -106,9 +115,13 @@ def render_options(line: int, scene: dict, player: Player, enemy: Enemy | None):
     """
     display(stylize("Options:", style=Style.UNDERLINE), line + 4, 2)
 
+    # contians the current boolean value for each option
+    # user can either select that option or not
     valid_opts = []
     line_num = 0
 
+    # for combat
+    # just Attack / Defend
     if enemy and enemy.is_alive():
         combat_options = [{"text": "Attack"}, {"text": "Defend"}]
         for i, opt in enumerate(combat_options):
@@ -117,12 +130,14 @@ def render_options(line: int, scene: dict, player: Player, enemy: Enemy | None):
             line_num = line + 4 + 1 + i
         return combat_options, line_num
 
+    # we iter the 'options' list in the current scene dict
     if "options" in scene:
         for i, option in enumerate(scene["options"]):
             preq = option.get("prerequisites", {})
             # if player has all the prerequisites items
             has_items = all(item in player.inventory for item in preq.get("items", []))
 
+            # boolean value of the option
             valid_opts.append(has_items)
 
             display_text = f"{i + 1}. {option['text']}"
@@ -132,6 +147,7 @@ def render_options(line: int, scene: dict, player: Player, enemy: Enemy | None):
                 styled_text = stylize(display_text, style=Style.DIM)
 
                 # Add the requirement text in red
+                # let the user know if they need any item for this option
                 required_items = preq.get("items", [])
                 if required_items:
                     req_text = f" (Requires: {', '.join(required_items)})"
@@ -153,20 +169,26 @@ def get_player_action(line_num: int, num_ops: int):
         # input line
         move_cursor(line_num + 3, 0)
 
+        # input can be either a string: a command maybe?
+        # or an integer: selecting an option
         user_input = input(f"? {Colors.MAGENTA_FG}").strip().lower()
         print(f"{Colors.DEFAULT_FG}", end="")
 
+        # if user wants to run a command
         if user_input in SPECIAL_CMDS:
             return user_input
 
         if user_input == "help":
+            # show available commands
             display("Cmds: " + ", ".join(SPECIAL_CMDS), line_num + 2, 0)
             move_cursor(line_num + 3, 0)
             input("Press any key to go back.")
             continue
 
+        # check if its an int or idk whatever user enters
         try:
             choice = int(user_input)
+            # user input (int) is within the range of available options
             if 1 <= choice <= num_ops:
                 move_cursor(line_num + 3, 0)
                 clear_acursor()
@@ -192,7 +214,7 @@ def update_game_state(player: Player, selected_opt: dict) -> str:
     if "gives_item" in selected_opt:
         item = selected_opt["gives_item"]
         if item not in player.inventory:
-            player.inventory.append(item)
+            player.inventory.append(item)  # gives item to user if they don't have it
     return selected_opt["next_scene"]
 
 
@@ -216,6 +238,7 @@ def handle_combat(player: Player, enemy: Enemy, player_action, combat_log):
 
     enemy.action(player)
 
+    # happens at random
     if enemy.is_defending:
         combat_log.append(f"The {enemy.name} braces for an attack.")
     else:
@@ -233,6 +256,7 @@ def handle_command(
     scene_name: str,
     combat_log: list | None,
 ):
+    # if/else check hell, at least its not java 😭
     if action == "quit":
         clear_screen()
         display(
@@ -245,6 +269,8 @@ def handle_command(
             5,
         )
         move_cursor(3, 1)
+        # why? just WHY??
+        # can't believe, need to check if user wants to quit
         while True:
             try:
                 uinput = input("Y / N >").lower()
@@ -302,6 +328,7 @@ def handle_command(
             return game
 
         except GameFileError as e:
+            # high chance someone messed with the save file
             move_cursor(2, 1)
             typing_anim(stylize(str(e), Colors.RED_FG))
 
@@ -321,14 +348,20 @@ def handle_command(
         pass
 
 
-def main():
+def main(we_loading: bool = False):
     # initialize the variables
     player = Player(name="Ali", hp=40, max_hp=50, damage=12, inventory=[])
     game_script = load_script()
     scene_name = game_script["start_scene"]
-    combat_log = []
+    combat_log: list[str] = []
     random_combat = []
     enemy = None
+
+    if we_loading:
+        result = handle_command("load", player, enemy, scene_name, combat_log)
+        # its always a tuple unless... i don't know the spelling of `load`
+        # stupid type checker
+        player, enemy, scene_name, combat_log = result
 
     # game loop
     while True:
@@ -341,6 +374,7 @@ def main():
                 random_combat.append(scene_name)
                 continue
 
+        # check for combat mode
         if "enemy" in current_scene and not enemy:
             enemy_data = current_scene["enemy"]
             enemy = Enemy(
@@ -380,7 +414,10 @@ def main():
                 continue
             continue
 
+        # process the user input
+
         if enemy:
+            # run the turn-based combat logic
             choice = valid_opts[player_action - 1]
             combat_result = handle_combat(player, enemy, choice, combat_log)
             if combat_result == 1:
@@ -389,6 +426,7 @@ def main():
                 combat_log.clear()
 
         else:
+            # select the available valid option
             if not valid_opts[player_action - 1]:
                 display(
                     stylize(
@@ -417,6 +455,8 @@ def main():
                 move_cursor(1 + i, 1)
                 typing_anim(part)
             break
+
+    # ending message
     sleep(2)
     clear_screen()
     final_text = (
@@ -427,6 +467,7 @@ def main():
         + " for playing "
         + stylize("Echoes of Nebula", Colors.BLUE_FG, Colors.BLACK_BG, Style.BOLD)
     )
+    # display at center
     move_cursor(4, round(os.get_terminal_size().columns / 2) - round(38 / 2))
     typing_anim(stylize(final_text, Colors.BLUE_FG))
     move_cursor(8, 0)
@@ -445,7 +486,9 @@ def home():
     typing_anim(stylize(text, Colors.BLUE_FG, Colors.BLACK_BG, Style.BOLD))
     display(stylize("Select an option:", style=Style.UNDERLINE), 6, 1)
     display(stylize("New game (Enter)", Colors.GREEN_FG), 7, 2)
-    display(stylize("Load game", Colors.YELLOW_FG), 8, 2)
+    display(stylize("Load game (load)", Colors.YELLOW_FG), 8, 2)
+
+    # kinda same as getting user input in game
     while True:
         move_cursor(10, 0)
         clear_acursor()
@@ -455,7 +498,7 @@ def home():
             print(f"{Colors.DEFAULT_FG}", end="")
             if opt != "" and opt != "load":
                 raise ValueError
-            break
+            return opt
         except ValueError:
             display(stylize("Invalid choice!", Colors.RED_FG), 10, 0)
             sys.stdout.flush()
@@ -463,5 +506,6 @@ def home():
 
 
 if __name__ == "__main__":
-    home()
-    main()
+    # nothing is wrong here
+    # simple basic type cast
+    main(home())
