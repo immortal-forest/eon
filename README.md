@@ -36,3 +36,5 @@ The game is built entirely in Python 3 using only the standard library, with a f
 ## Tech Stack
 
 - **Python 3.12** (No external packages required)
+
+- Make sure your terminal supports **ANSI** sequences.
